@@ -24,6 +24,6 @@ python3 -m pip install --no-cache-dir -r ./requirements.txt
 
 ### Рассматриваемые методы:
 
-* [Дихотомический поиск](https://en.wikipedia.org/wiki/Binary_search_algorithm)
+* [Дихотомический поиск](https://en.wikipedia.org/wiki/Dichotomic_search)
 * [Метод золотого сечения](https://en.wikipedia.org/wiki/Golden-section_search)
 * [Метод Фибоначи](https://en.wikipedia.org/wiki/Fibonacci_search_technique)

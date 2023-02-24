@@ -1,9 +1,10 @@
 import unittest
 
 import main
+import methods
 
 
-class TestDichotomic(unittest.TestCase):
+class TestFunctions(unittest.TestCase):
     def setUp(self):
         self.func1 = main.func1
         self.func2 = main.func2
@@ -32,7 +33,33 @@ class TestDichotomic(unittest.TestCase):
         self.assertEqual(self.func2(1.5), 1.25)
         self.assertEqual(self.func2(2.0), 3)
 
+
+class TestMethods(unittest.TestCase):
+    def setUp(self):
+        self.fib = methods.fibonacci_of
+        self.fib_seq = methods.fibonacci_seq
+
     # TODO: тесты для дихотомического поиска
+
+    def test_fib(self):
+        self.assertEqual(self.fib(0), 0)
+        self.assertEqual(self.fib(1), 1)
+        self.assertEqual(self.fib(2), 1)
+        self.assertEqual(self.fib(3), 2)
+        self.assertEqual(self.fib(4), 3)
+        self.assertEqual(self.fib(5), 5)
+        self.assertEqual(self.fib(6), 8)
+        self.assertEqual(self.fib(7), 13)
+        self.assertEqual(self.fib(8), 21)
+        self.assertEqual(self.fib(9), 34)
+        self.assertEqual(self.fib(10), 55)
+        self.assertEqual(self.fib(19), 4181)
+
+    def test_fib_seq(self):
+        self.assertEqual(
+            self.fib_seq(10),
+            [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+        )
 
 
 if __name__ == "__main__":

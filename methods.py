@@ -48,3 +48,15 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
     # TODO: Метод золотого сечения
 
     # TODO: Метод Фибоначи
+
+
+def fibonacci_seq(n: np.integer) -> list[np.integer]:
+    return [fibonacci_of(i) for i in range(n + 1)]
+
+
+def fibonacci_of(n):
+    fib_cache = {0: 0, 1: 1}
+    if n in fib_cache:
+        return fib_cache[n]
+    fib_cache[n] = fibonacci_of(n - 1) + fibonacci_of(n - 2)
+    return fib_cache[n]

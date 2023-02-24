@@ -36,10 +36,20 @@ class TestFunctions(unittest.TestCase):
 
 class TestMethods(unittest.TestCase):
     def setUp(self):
+        self.dichot = methods.dichotomic_search
         self.fib = methods.fibonacci_of
         self.fib_seq = methods.fibonacci_seq
 
     # TODO: тесты для дихотомического поиска
+    def test_dichot(self):
+        self.assertAlmostEqual(
+            first=self.dichot(
+                lambda x: x*x + 2 * x,
+                a=-3, b=5, eps=0.1, l=0.2
+            )[0],
+            second=-1.0,
+            delta=0.1
+        )
 
     def test_fib(self):
         self.assertEqual(self.fib(0), 0)

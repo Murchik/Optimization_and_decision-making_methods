@@ -1,7 +1,10 @@
 DOCKER_IMAGE_NAME := opt_meth_img
 DOCKER_CONTAINER_NAME := opt_meth
 
-all: build run
+all: test build run
+
+test:
+	python3 -m test -v
 
 build:
 	docker build -t $(DOCKER_IMAGE_NAME) .

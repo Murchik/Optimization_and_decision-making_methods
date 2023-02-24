@@ -8,17 +8,19 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
                       eps: np.float32,
                       l: np.float32
                       ) -> tuple[np.float32, np.integer]:
-    # Верхняя (правая) граница интервала должна быть больше чем нижняя (левая)
     assert b > a, f"invalid interval [{a}, {b}]"
+    assert 2 * eps > 0
 
-    # TODO: !!! Избавиться от бесконечного цикла при l = 2eps !!!
-    # l должно быть больше чем 2 * eps, иначе цикл 'while not b - a < l' будет
-    # бесконечным, сравнивая 0.X000000000000003 c 0.X
-    assert l > 2.0 * \
-        eps, f"endless loop because l <= 2eps. l={l}, eps={eps}"
+    logging.debug(
+        "starting extremum search for %s on interval [%.3f, %.3f] with eps=%f, l=%f",
+        func.__name__, a, b, eps, l
+    )
 
     k = 1
-    while not b - a < l:
+    # Если идти до значения <= 2*eps, то будет бесконечный цикл
+    while b - a > (2 + eps) * eps:
+        if b - a < l:
+            break
 
         lm = (a + b) / 2 - eps
         mu = (a + b) / 2 + eps
@@ -43,7 +45,7 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
 
         k += 1
 
-    return a, k
+    return (a + b) / 2, k
 
     # TODO: Метод золотого сечения
 
@@ -54,7 +56,7 @@ def fibonacci_seq(n: np.integer) -> list[np.integer]:
     return [fibonacci_of(i) for i in range(n + 1)]
 
 
-def fibonacci_of(n):
+def fibonacci_of(n: np.integer) -> np.integer:
     fib_cache = {0: 0, 1: 1}
     if n in fib_cache:
         return fib_cache[n]

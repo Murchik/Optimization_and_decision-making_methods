@@ -12,7 +12,7 @@ def func2(x: np.float32) -> np.float32:
 
 
 def main():
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.DEBUG)
 
     funcs = [func1, func2]
     intervals = [
@@ -33,12 +33,15 @@ def main():
                             func=func, a=a, b=b, eps=eps, l=l
                         )
                         logging.info(
-                            "extremum for %s on [%.3f, %.3f] is %.3f. Iterations: %i",
-                            func.__name__, a, b, result, iterations
+                            "extremum for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
+                            func.__name__, a, b, l, eps, result, iterations
                         )
                     except AssertionError as err:
-                        logging.error("%s", str(err))
-                    continue
+                        logging.error(
+                            "finding extremum for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f):%s",
+                            func.__name__, a, b, l, eps, str(err)
+                        )
+                        continue
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@ import logging
 from typing import Callable
 import numpy as np
 
+import functools
+
 
 def dichotomic_search(func: Callable[[np.float32], np.float32],
                       a: np.float32, b: np.float32,
@@ -73,13 +75,10 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
     # TODO: Метод Фибоначи
 
 
+@functools.cache
+def fibonacci_of(n: np.integer) -> np.integer:
+    return n if n < 2 else fibonacci_of(n - 1) + fibonacci_of(n - 2)
+
+
 def fibonacci_seq(n: np.integer) -> list[np.integer]:
     return [fibonacci_of(i) for i in range(n + 1)]
-
-
-def fibonacci_of(n: np.integer) -> np.integer:
-    fib_cache = {0: 0, 1: 1}
-    if n in fib_cache:
-        return fib_cache[n]
-    fib_cache[n] = fibonacci_of(n - 1) + fibonacci_of(n - 2)
-    return fib_cache[n]

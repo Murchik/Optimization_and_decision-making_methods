@@ -1,8 +1,7 @@
 import logging
 from typing import Callable
-import numpy as np
-
 import functools
+import numpy as np
 
 
 def dichotomic_search(func: Callable[[np.float32], np.float32],

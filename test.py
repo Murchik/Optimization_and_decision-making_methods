@@ -64,7 +64,12 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(self.fib(9), 34)
         self.assertEqual(self.fib(10), 55)
         self.assertEqual(self.fib(19), 4181)
-        self.assertEqual(self.fib(100), 354224848179261915075)
+        self.assertEqual(
+            self.fib(100), 354224848179261915075
+        )
+        self.assertEqual(
+            self.fib(200), 280571172992510140037611932413038677189525
+        )
 
     def test_fib_seq(self):
         self.assertEqual(

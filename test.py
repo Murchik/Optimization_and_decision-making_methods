@@ -45,7 +45,7 @@ class TestMethods(unittest.TestCase):
         self.assertAlmostEqual(
             first=self.dichot(
                 lambda x: x*x + 2 * x,
-                a=-3, b=5, eps=0.1, l=0.2
+                a=-3, b=5, eps=0.05, l=0.2
             )[0],
             second=-1.0,
             delta=0.1
@@ -64,6 +64,7 @@ class TestMethods(unittest.TestCase):
         self.assertEqual(self.fib(9), 34)
         self.assertEqual(self.fib(10), 55)
         self.assertEqual(self.fib(19), 4181)
+        self.assertEqual(self.fib(100), 354224848179261915075)
 
     def test_fib_seq(self):
         self.assertEqual(

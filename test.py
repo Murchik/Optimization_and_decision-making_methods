@@ -36,11 +36,12 @@ class TestFunctions(unittest.TestCase):
 
 class TestMethods(unittest.TestCase):
     def setUp(self):
+        self.golden = methods.golden_search
         self.dichot = methods.dichotomic_search
+        self.fibonacci = methods.fibonacci_search
         self.fib = methods.fibonacci_of
         self.fib_seq = methods.fibonacci_seq
 
-    # TODO: тесты для дихотомического поиска
     def test_dichot(self):
         self.assertAlmostEqual(
             first=self.dichot(
@@ -48,33 +49,302 @@ class TestMethods(unittest.TestCase):
                 a=-3, b=5, eps=0.05, l=0.2
             )[0],
             second=-1.0,
+            delta=0.2
+        )
+
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=0.0,
             delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=0.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=0.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=0, b=3, eps=0.01, l=0.1
+            )[0],
+            second=3.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=0, b=3, eps=0.001, l=0.01
+            )[0],
+            second=3.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func1,
+                a=0, b=3, eps=0.0001, l=0.001
+            )[0],
+            second=3.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=-1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=-1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=-1.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=0, b=3, eps=0.01, l=0.1
+            )[0],
+            second=1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=0, b=3, eps=0.001, l=0.01
+            )[0],
+            second=1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.dichot(
+                main.func2,
+                a=0, b=3, eps=0.0001, l=0.001
+            )[0],
+            second=1.0,
+            delta=0.001
+        )
+
+    def test_golden(self):
+        self.assertAlmostEqual(
+            first=self.golden(
+                lambda x: x*x + 2 * x,
+                a=-3, b=5, eps=0.05, l=0.2
+            )[0],
+            second=-1.0,
+            delta=0.2
+        )
+
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func1,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=0.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func1,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=0.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func1,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=0.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=-1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=-1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=-1.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=0, b=3, eps=0.01, l=0.1
+            )[0],
+            second=1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=0, b=3, eps=0.001, l=0.01
+            )[0],
+            second=1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.golden(
+                main.func2,
+                a=0, b=3, eps=0.0001, l=0.001
+            )[0],
+            second=1.0,
+            delta=0.001
+        )
+
+    def test_fibonacci(self):
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                lambda x: x*x + 2 * x,
+                a=-3, b=5, eps=0.05, l=0.2
+            )[0],
+            second=-1.0,
+            delta=0.2
+        )
+
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func1,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=0.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func1,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=0.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func1,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=0.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=-3, b=0, eps=0.01, l=0.1
+            )[0],
+            second=-1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=-3, b=0, eps=0.001, l=0.01
+            )[0],
+            second=-1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=-3, b=0, eps=0.0001, l=0.001
+            )[0],
+            second=-1.0,
+            delta=0.001
+        )
+
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=0, b=3, eps=0.01, l=0.1
+            )[0],
+            second=1.0,
+            delta=0.1
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=0, b=3, eps=0.001, l=0.01
+            )[0],
+            second=1.0,
+            delta=0.01
+        )
+        self.assertAlmostEqual(
+            first=self.fibonacci(
+                main.func2,
+                a=0, b=3, eps=0.0001, l=0.001
+            )[0],
+            second=1.0,
+            delta=0.001
         )
 
     def test_fib(self):
-        self.assertEqual(self.fib(0), 0)
+        self.assertEqual(self.fib(0), 1)
         self.assertEqual(self.fib(1), 1)
-        self.assertEqual(self.fib(2), 1)
-        self.assertEqual(self.fib(3), 2)
-        self.assertEqual(self.fib(4), 3)
-        self.assertEqual(self.fib(5), 5)
-        self.assertEqual(self.fib(6), 8)
-        self.assertEqual(self.fib(7), 13)
-        self.assertEqual(self.fib(8), 21)
-        self.assertEqual(self.fib(9), 34)
-        self.assertEqual(self.fib(10), 55)
-        self.assertEqual(self.fib(19), 4181)
+        self.assertEqual(self.fib(2), 2)
+        self.assertEqual(self.fib(3), 3)
+        self.assertEqual(self.fib(4), 5)
+        self.assertEqual(self.fib(5), 8)
+        self.assertEqual(self.fib(6), 13)
+        self.assertEqual(self.fib(7), 21)
+        self.assertEqual(self.fib(8), 34)
+        self.assertEqual(self.fib(9), 55)
+        self.assertEqual(self.fib(18), 4181)
         self.assertEqual(
-            self.fib(100), 354224848179261915075
+            self.fib(99), 354224848179261915075
         )
         self.assertEqual(
-            self.fib(200), 280571172992510140037611932413038677189525
+            self.fib(199), 280571172992510140037611932413038677189525
         )
 
     def test_fib_seq(self):
         self.assertEqual(
-            self.fib_seq(10),
-            [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
+            self.fib_seq(9),
+            [1, 1, 2, 3, 5, 8, 13, 21, 34, 55]
         )
 
 

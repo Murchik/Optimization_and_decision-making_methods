@@ -4,6 +4,8 @@ import methods
 
 
 def func1(x: np.float32) -> np.float32:
+    if np.isclose(x, 9):
+        return np.finfo(np.float32).max
     return (x - 4)/(x - 9)
 
 
@@ -16,7 +18,7 @@ def main():
 
     funcs = [func1, func2]
     intervals = [
-        [[-3, 0], [-3, 9], [9, 15]],  # Интервалы для функции 1
+        [[-3, 0],  [-3, 9], [9, 15]],  # Интервалы для функции 1
         [[-10, 1], [-2, 0], [-2, 8]]  # Интервалы для функции 2
     ]
     epses = [0.1, 0.01, 0.001]
@@ -33,7 +35,23 @@ def main():
                             func=func, a=a, b=b, eps=eps, l=l
                         )
                         logging.info(
-                            "extremum for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
+                            "DICHOTOMIC for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
+                            func.__name__, a, b, l, eps, result, iterations
+                        )
+
+                        result, iterations = methods.golden_search(
+                            func=func, a=a, b=b, eps=eps, l=l
+                        )
+                        logging.info(
+                            "GOLDEN for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
+                            func.__name__, a, b, l, eps, result, iterations
+                        )
+
+                        result, iterations = methods.fibonacci_search(
+                            func=func, a=a, b=b, eps=eps, l=l
+                        )
+                        logging.info(
+                            "FIBONACCI for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
                             func.__name__, a, b, l, eps, result, iterations
                         )
                     except AssertionError as err:

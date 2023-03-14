@@ -43,7 +43,7 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
             "b - a <= l? %.3f - %.3f (%.3f) < %.3f? - %r",
             b, a, b - a, l, b - a < l or np.isclose(b - a, l)
         )
-        if np.abs(b - a) < l or np.isclose(b - a, l):
+        if b - a < l or np.isclose(b - a, l):
             break
         lm = (a + b) / 2 - eps
         mu = (a + b) / 2 + eps
@@ -75,6 +75,22 @@ def golden_search(func: Callable[[np.float32], np.float32],
                   eps: np.float32,
                   l: np.float32
                   ) -> tuple[np.float32, np.integer]:
+    """
+    Метод золотого сечения.
+    Идея метода состоит в использовании на \
+    каждой итерации для сокращения интервала неопределенности одной из \
+    внутренних точек предыдущей итерации.
+
+    Args:
+        func (Callable[[np.float32], np.float32]): целевая функция f(x)
+        a (np.float32): левая граница интервала неопределенности
+        b (np.float32): правая граница интервала неопределенности
+        eps (np.float32): константа различимости
+        l (np.float32): конечная длина интервала
+
+    Returns:
+        tuple[np.float32, np.integer]: tuple[точка минимума, кол-во потребовавшихся итераций]
+    """
     assert eps >= 0, "'eps' should not be negative"
     assert l >= 0, "'l' should not be negative"
     assert b > a, f"invalid interval [{a}, {b}]"
@@ -97,8 +113,6 @@ def golden_search(func: Callable[[np.float32], np.float32],
 
     k = 1
     while True:
-        assert b > a, f"invalid interval [{a}, {b}]"
-
         # Шаг 1
         logging.debug(
             "b - a <= l? %.3f - %.3f (%.3f) < %.3f? - %r",
@@ -147,6 +161,23 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
                      eps: np.float32,
                      l: np.float32
                      ) -> tuple[np.float32, np.integer]:
+    """
+    Метод Фибоначчи.
+    Метод аналогичен методу золотого сечения. \
+    Отличие состоит в том, что коэффициент сжатия интервала \
+    неопределенности меняется от итерации к итерации согласно \
+    последовательности Фибоначчи.
+
+    Args:
+        func (Callable[[np.float32], np.float32]): целевая функция f(x)
+        a (np.float32): левая граница интервала неопределенности
+        b (np.float32): правая граница интервала неопределенности
+        eps (np.float32): константа различимости
+        l (np.float32): конечная длина интервала
+
+    Returns:
+        tuple[np.float32, np.integer]: tuple[точка минимума, кол-во потребовавшихся итераций]
+    """
     assert eps > 0, "'eps' should not be negative"
     assert l > 0, "'l' should not be negative"
     assert b > a, f"invalid interval [{a}, {b}]"
@@ -167,7 +198,6 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
 
     # Подготовить массив с числами Фибоначи
     fib: list[np.float32] = fibonacci_seq(n)
-    logging.debug("%s", str(fib))
 
     # Шаг 0
     k = 1
@@ -194,6 +224,7 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
             f_lm = f_mu
             f_mu = func(mu)
 
+        # f_lm <= f_mu
         else:
             # Шаг 3
             # a = a
@@ -236,8 +267,24 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
 
 @functools.cache
 def fibonacci_of(n: np.integer) -> np.integer:
+    """Метод вычисления N-ого числа Фибоначчи
+
+    Args:
+        n (np.integer): какое число Фибоначчи нужно вычислить
+
+    Returns:
+        np.integer: N-ое число Фибоначчи
+    """
     return 1 if n < 2 else fibonacci_of(n - 1) + fibonacci_of(n - 2)
 
 
 def fibonacci_seq(n: np.integer) -> list[np.integer]:
+    """Метод вычисления последовательности чисел Фибоначчи
+
+    Args:
+        n (np.integer): сколько чисел Фибоначчи необходимо вычислить
+
+    Returns:
+        list[np.integer]: лист с числами Фибоначчи от 0-ого до N-ого (включая N-ое)
+    """
     return [fibonacci_of(i) for i in range(n + 1)]

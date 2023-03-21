@@ -1,4 +1,5 @@
 import logging
+from typing import Callable
 import numpy as np
 import methods
 
@@ -13,8 +14,31 @@ def func2(x: np.float32) -> np.float32:
     return np.abs(np.power(x, 2) - 1)
 
 
+def apply_method(
+    method: Callable,
+    func: Callable,
+    a: np.float32, b: np.float32,
+    eps: np.float32, l: np.float32
+) -> None:
+    print(
+        f"{method.__name__} for {func.__name__} with a={a}, b={b}, eps={eps}, l={l}"
+    )
+
+    try:
+        result, iterations, table = method(
+            func=func, a=a, b=b, eps=eps, l=l
+        )
+    except AssertionError as err:
+        logging.error("%s\n", str(err))
+        return
+
+    table.float_format = ".3"
+    print(table)
+    print(f"Found x={result}, iterations={iterations}\n")
+
+
 def main():
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
 
     funcs = [func1, func2]
     intervals = [
@@ -30,36 +54,21 @@ def main():
             b = interval[1]
             for eps in epses:
                 for l in ls:
-                    try:
-                        result, iterations = methods.dichotomic_search(
-                            func=func, a=a, b=b, eps=eps, l=l
-                        )
-                        logging.info(
-                            "DICHOTOMIC for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
-                            func.__name__, a, b, l, eps, result, iterations
-                        )
-
-                        result, iterations = methods.golden_search(
-                            func=func, a=a, b=b, eps=eps, l=l
-                        )
-                        logging.info(
-                            "GOLDEN for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
-                            func.__name__, a, b, l, eps, result, iterations
-                        )
-
-                        result, iterations = methods.fibonacci_search(
-                            func=func, a=a, b=b, eps=eps, l=l
-                        )
-                        logging.info(
-                            "FIBONACCI for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f): x=%.3f, Iterations: %i",
-                            func.__name__, a, b, l, eps, result, iterations
-                        )
-                    except AssertionError as err:
-                        logging.error(
-                            "finding extremum for %s on [%.3f, %.3f] (l=%.3f, eps=%.3f):%s",
-                            func.__name__, a, b, l, eps, str(err)
-                        )
-                        continue
+                    apply_method(
+                        method=methods.dichotomic_search, func=func,
+                        a=a, b=b,
+                        eps=eps, l=l
+                    )
+                    apply_method(
+                        method=methods.golden_search, func=func,
+                        a=a, b=b,
+                        eps=eps, l=l
+                    )
+                    apply_method(
+                        method=methods.fibonacci_search, func=func,
+                        a=a, b=b,
+                        eps=eps, l=l
+                    )
 
 
 if __name__ == "__main__":

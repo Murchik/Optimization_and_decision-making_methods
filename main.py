@@ -25,7 +25,7 @@ def apply_method(
     )
 
     try:
-        result, iterations, table = method(
+        result, func_calls, table = method(
             func=func, a=a, b=b, eps=eps, l=l
         )
     except AssertionError as err:
@@ -34,7 +34,7 @@ def apply_method(
 
     table.float_format = ".3"
     print(table)
-    print(f"Found x={result}, iterations={iterations}\n")
+    print(f"Found x={result}, func_calls={func_calls}\n")
 
 
 def main():

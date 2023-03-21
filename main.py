@@ -1,17 +1,19 @@
+import os
+import glob
 import logging
 from typing import Callable
 import numpy as np
 import methods
+from prettytable import PrettyTable
 
 
-def func1(x: np.float32) -> np.float32:
-    if np.isclose(x, 9):
-        return np.finfo(np.float32).max
-    return (x - 4)/(x - 9)
+SAVE_PATH = "./results"
 
 
-def func2(x: np.float32) -> np.float32:
-    return np.abs(np.power(x, 2) - 1)
+def save_table(path: str, filename: str, table: PrettyTable):
+    os.makedirs(path, exist_ok=True)
+    with open(f"{path}/{filename}.csv", "w", encoding="UTF-8") as f:
+        f.write(table.get_csv_string())
 
 
 def apply_method(
@@ -34,11 +36,34 @@ def apply_method(
 
     table.float_format = ".3"
     print(table)
-    print(f"Found x={result}, func_calls={func_calls}\n")
+    print(f"Found x={result:.4f}, func_calls={func_calls}\n")
+
+    save_table(
+        path=SAVE_PATH,
+        filename=f"{method.__name__}_{func.__name__}_a{a}_b{b}_eps{eps}_l{l}",
+        table=table
+    )
+
+
+def func1(x: np.float32) -> np.float32:
+    if np.isclose(x, 9):
+        return np.finfo(np.float32).max
+    return (x - 4)/(x - 9)
+
+
+def func2(x: np.float32) -> np.float32:
+    return np.abs(np.power(x, 2) - 1)
 
 
 def main():
     logging.basicConfig(level=logging.INFO)
+
+    os.makedirs(SAVE_PATH, exist_ok=True)
+    # Очистить директорию, если в ней есть файлы
+    if len(os.listdir(SAVE_PATH)) != 0:
+        files = glob.glob(f"{SAVE_PATH}/*", recursive=True)
+        for f in files:
+            os.remove(f)
 
     funcs = [func1, func2]
     intervals = [

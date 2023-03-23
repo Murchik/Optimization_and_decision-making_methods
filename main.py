@@ -23,7 +23,7 @@ def apply_method(
     eps: np.float32, l: np.float32
 ) -> None:
     print(
-        f"{method.__name__} for {func.__name__} with a={a}, b={b}, eps={eps}, l={l}"
+        f"{method.__name__} for {func.__doc__} with a={a}, b={b}, eps={eps}, l={l}"
     )
 
     try:
@@ -36,7 +36,9 @@ def apply_method(
 
     table.float_format = ".3"
     print(table)
-    print(f"Found x={result:.4f}, func_calls={func_calls}\n")
+    print(
+        f"Found x={result:.4f}, f(x)={func(result):.4f}, func_calls={func_calls}\n"
+    )
 
     save_table(
         path=SAVE_PATH,
@@ -46,12 +48,14 @@ def apply_method(
 
 
 def func1(x: np.float32) -> np.float32:
+    """f(x) = (x - 4)/(x - 9)"""
     if np.isclose(x, 9):
         return np.finfo(np.float32).max
     return (x - 4)/(x - 9)
 
 
 def func2(x: np.float32) -> np.float32:
+    """f(x) = |x^2 - 1|"""
     return np.abs(np.power(x, 2) - 1)
 
 

@@ -1,4 +1,3 @@
-import logging
 import functools
 from typing import Callable
 import numpy as np
@@ -32,21 +31,18 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
 
     assert l > 2 * eps, "l must be more than 2 eps"
 
-    logging.debug(
-        "starting dichotomic extremum search for %s on interval [%.3f, %.3f] with eps=%f, l=%f",
-        func.__name__, a, b, eps, l
-    )
-
     table = PrettyTable()
-    table.field_names = ["k", "a", "b", "lm", "f(lm)", "mu", "f(mu)"]
+    table.field_names = ["k", "a", "b", "lm",  "mu", "f(lm)", "f(mu)"]
 
     func_calls = 0
 
+    # Начальный этап
     k = 1
-    table.add_row([k, a, b, 0, 0, 0, 0])
+
+    # Основной этап
     while True:
         # Шаг 1
-        if b - a < l or np.isclose(b - a, l):
+        if b - a < l:
             break
         lm = (a + b) / 2 - eps
         mu = (a + b) / 2 + eps
@@ -55,6 +51,8 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
         f_lm = func(lm)
         f_mu = func(mu)
         func_calls += 2
+
+        table.add_row([k, a, b, lm, mu, f_lm, f_mu])
 
         if f_lm < f_mu:
             # a = a
@@ -65,8 +63,6 @@ def dichotomic_search(func: Callable[[np.float32], np.float32],
 
         # Шаг 3
         k += 1
-
-        table.add_row([k, a, b, lm, f_lm, mu, f_mu])
 
     return (a + b) / 2, func_calls, table
 
@@ -96,21 +92,15 @@ def golden_search(func: Callable[[np.float32], np.float32],
     assert l >= 0, "'l' should not be negative"
     assert b > a, f"invalid interval [{a}, {b}]"
 
-    assert l > 2 * eps, "l must be more than 2 eps"
-
-    logging.debug(
-        "starting golden extremum search for %s on interval [%.3f, %.3f] with eps=%f, l=%f",
-        func.__name__, a, b, eps, l
-    )
-
     table = PrettyTable()
-    table.field_names = ["k", "a", "b", "lm", "f(lm)", "mu", "f(mu)"]
+    table.field_names = ["k", "a", "b", "lm",  "mu", "f(lm)", "f(mu)"]
 
     func_calls = 0
-
     alpha = (np.sqrt(5) - 1) / 2  # 0.61803...
 
-    # Шаг 0
+    # Начальный этап
+    k = 1
+
     lm = a + (1 - alpha) * (b - a)
     mu = a + alpha * (b - a)
 
@@ -118,14 +108,16 @@ def golden_search(func: Callable[[np.float32], np.float32],
     f_mu = func(mu)
     func_calls += 2
 
-    k = 1
-    table.add_row([k, a, b, lm, f_lm, mu, f_mu])
+    # Основной этап
     while True:
+        table.add_row([k, a, b, lm, mu, f_lm, f_mu])
+
         # Шаг 1
-        if b - a < l or np.isclose(b - a, l):
+        if b - a < l:
             break
 
         if f_lm > f_mu:
+
             # Шаг 2
             a = lm
             # b = b
@@ -134,12 +126,12 @@ def golden_search(func: Callable[[np.float32], np.float32],
             f_lm = f_mu
 
             mu = a + alpha * (b - a)
-
             f_mu = func(mu)
             func_calls += 1
 
         # f_lm <= f_mu
         else:
+
             # Шаг 3
             # a = a
             b = mu
@@ -148,14 +140,11 @@ def golden_search(func: Callable[[np.float32], np.float32],
             f_mu = f_lm
 
             lm = a + (1 - alpha) * (b - a)
-
             f_lm = func(lm)
             func_calls += 1
 
         # Шаг 4
         k += 1
-
-        table.add_row([k, a, b, lm, f_lm, mu, f_mu])
 
     return (a + b) / 2, func_calls, table
 
@@ -186,17 +175,13 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
     assert l > 0, "'l' should not be negative"
     assert b > a, f"invalid interval [{a}, {b}]"
 
-    assert l > 2 * eps, "l must be more than 2 eps"
-
-    logging.debug(
-        "starting fibonacci extremum search for %s on interval [%.3f, %.3f] with eps=%f, l=%f",
-        func.__name__, a, b, eps, l
-    )
-
     table = PrettyTable()
-    table.field_names = ["k", "a", "b", "lm", "f(lm)", "mu", "f(mu)"]
+    table.field_names = ["k", "a", "b", "lm",  "mu", "f(lm)", "f(mu)"]
 
     func_calls = 0
+
+    # Начальный этап
+    k = 1
 
     # Вычислить кол-во итераций алгоритма
     n = 1
@@ -208,24 +193,23 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
     # Подготовить массив с числами Фибоначи
     fib: list[np.float32] = fibonacci_seq(n)
 
-    # Шаг 0
-    k = 1
-
-    lm = a + fib[n - k - 1] / fib[n - k + 1] * (b - a)
-    mu = a + fib[n - k] / fib[n - k + 1] * (b - a)
+    lm = a + fib[n - 2] / fib[n] * (b - a)
+    mu = a + fib[n - 1] / fib[n] * (b - a)
 
     f_lm = func(lm)
     f_mu = func(mu)
     func_calls += 2
 
-    table.add_row([k, a, b, lm, f_lm, mu, f_mu])
+    # Основной этап
     while True:
+        table.add_row([k, a, b, lm, mu, f_lm, f_mu])
+
         # Шаг 1
         if f_lm > f_mu:
+
             # Шаг 2
             a = lm
             #  b = b
-
             lm = mu
             f_lm = f_mu
 
@@ -239,10 +223,10 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
 
         # f_lm <= f_mu
         else:
+
             # Шаг 3
             # a = a
             b = mu
-
             mu = lm
             f_mu = f_lm
 
@@ -257,15 +241,17 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
         # Шаг 4
         k += 1
 
-        table.add_row([k, a, b, lm, f_lm, mu, f_mu])
-
     # Шаг 5
+    k += 1
+
     # lm = lm
     mu = lm + eps
 
-    f_lm = func(lm)
+    # f_lm = func(lm)
     f_mu = func(mu)
-    func_calls += 2
+    func_calls += 1
+
+    table.add_row([k, a, b, lm, mu, f_lm, f_mu])
 
     if f_lm > f_mu:
         a = lm
@@ -274,9 +260,7 @@ def fibonacci_search(func: Callable[[np.float32], np.float32],
         # a = a
         b = lm
 
-    table.add_row([k, a, b, lm, f_lm, mu, f_mu])
-
-    return (a + b) / 2, k, table
+    return (a + b) / 2, func_calls, table
 
 
 @functools.cache
